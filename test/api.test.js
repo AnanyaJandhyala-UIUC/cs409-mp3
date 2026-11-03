@@ -283,10 +283,8 @@ describe('CS409 MP3 API', { concurrency: false }, () => {
         it('deletes a user and then returns 404', async () => {
             var user = await createUser();
             var res = await request(app).delete('/api/users/' + user._id);
-            assert.equal(res.status, 200);
-            assert.equal(res.body.message, 'OK');
-            assert.equal(res.body.data._id, user._id);
-            assert.equal(res.body.data.email, user.email);
+            assert.equal(res.status, 204);
+            assert.equal(res.text, '');
             assertError(await request(app).get('/api/users/' + user._id), 404);
         });
     });
@@ -482,8 +480,8 @@ describe('CS409 MP3 API', { concurrency: false }, () => {
             var user = await createUser();
             var task = await createTask({ assignedUser: user._id });
             var res = await request(app).delete('/api/tasks/' + task._id);
-            assert.equal(res.status, 200);
-            assert.equal(res.body.data._id, task._id);
+            assert.equal(res.status, 204);
+            assert.equal(res.text, '');
             assert.deepEqual((await getUser(user._id)).pendingTasks, []);
             assertError(await request(app).get('/api/tasks/' + task._id), 404);
         });
@@ -766,7 +764,8 @@ describe('CS409 MP3 API', { concurrency: false }, () => {
                 completed: true
             });
             var res = await request(app).delete('/api/users/' + user._id);
-            assert.equal(res.status, 200);
+            assert.equal(res.status, 204);
+            assert.equal(res.text, '');
             var pendingAfter = await getTask(pending._id);
             var completedAfter = await getTask(completed._id);
             assert.equal(pendingAfter.assignedUser, '');

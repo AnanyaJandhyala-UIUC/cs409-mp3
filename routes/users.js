@@ -106,8 +106,7 @@ async function deleteUser(req, res) {
         throw new utils.HttpError(404, 'User not found');
     }
 
-    var snapshot = user.toObject();
     await utils.unassignTasksForUser(userId);
     await User.deleteOne({ _id: user._id });
-    utils.send(res, 200, 'OK', snapshot);
+    res.status(204).end();
 }

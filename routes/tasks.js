@@ -100,8 +100,7 @@ async function deleteTask(req, res) {
         throw new utils.HttpError(404, 'Task not found');
     }
 
-    var snapshot = task.toObject();
     await utils.removeTaskFromUsers(taskId);
     await Task.deleteOne({ _id: task._id });
-    utils.send(res, 200, 'OK', snapshot);
+    res.status(204).end();
 }
